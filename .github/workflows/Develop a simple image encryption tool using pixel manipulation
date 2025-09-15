@@ -1,0 +1,68 @@
+from PIL import Image
+
+def encrypt_image_swap(image_path, output_path):
+    """Encrypts an image by swapping pixel values within each row."""
+    img = Image.open(image_path)
+    pixels = img.load()
+    width, height = img.size
+
+    for y in range(height):
+        for x in range(width // 2):
+            # Swap pixel (x, y) with (width - 1 - x, y)
+            temp = pixels[x, y]
+            pixels[x, y] = pixels[width - 1 - x, y]
+            pixels[width - 1 - x, y] = temp
+    
+    img.save(output_path)
+    print(f"Image encrypted by swapping pixels saved to {output_path}")
+
+def decrypt_image_swap(encrypted_image_path, output_path):
+    """Decrypts an image encrypted by swapping pixels (reversing the swap)."""
+    # The decryption process for this simple swap is the same as encryption
+    encrypt_image_swap(encrypted_image_path, output_path)
+    print(f"Image decrypted from swap encryption saved to {output_path}")
+
+def encrypt_image_xor(image_path, output_path, key):
+    """Encrypts an image by applying a XOR operation to each pixel's color components."""
+    img = Image.open(image_path)
+    pixels = img.load()
+    width, height = img.size
+
+    for y in range(height):
+        for x in range(width):
+            r, g, b = pixels[x, y]
+            # Apply XOR operation to each color component
+            pixels[x, y] = (r ^ key, g ^ key, b ^ key)
+    
+    img.save(output_path)
+    print(f"Image encrypted using XOR operation saved to {output_path}")
+
+def decrypt_image_xor(encrypted_image_path, output_path, key):
+    """Decrypts an image encrypted with XOR using the same key."""
+    # The decryption for XOR is also applying XOR with the same key
+    encrypt_image_xor(encrypted_image_path, output_path, key)
+    print(f"Image decrypted from XOR encryption saved to {output_path}")
+
+if __name__ == "__main__":
+    # Example Usage:
+    # 1. Ensure you have an image file (e.g., "input.png") in the same directory.
+    # 2. Run the script.
+
+    original_image = "input.png" # Replace with your image file
+    
+    # --- Pixel Swapping Encryption/Decryption ---
+    encrypted_swap_image = "encrypted_swap.png"
+    decrypted_swap_image = "decrypted_swap.png"
+
+    encrypt_image_swap(original_image, encrypted_swap_image)
+    decrypt_image_swap(encrypted_swap_image, decrypted_swap_image)
+
+    # --- XOR Operation Encryption/Decryption ---
+    encryption_key = 123 # A simple integer key for XOR
+    encrypted_xor_image = "encrypted_xor.png"
+    decrypted_xor_image = "decrypted_xor.png"
+
+    encrypt_image_xor(original_image, encrypted_xor_image, encryption_key)
+    decrypt_image_xor(encrypted_xor_image, decrypted_xor_image, encryption_key)
+
+
